@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% from "_macros.html" import poster %}
+{% block title %}{{ query }} · Movie Library{% endblock %}
+{% block content %}
+<section class="page">
+  <h1 class="page-title">{% if movies %}{{ movies|length }} results for “{{ query }}”{% else %}Results for “{{ query }}”{% endif %}</h1>
+
+  {% if movies %}
+    <ul class="grid">
+      {% for m in movies %}
+      <li class="card">
+        <a class="card-link" href="{{ url_for('movie_detail', imdb_id=m.imdbID) }}">
+          <span class="card-art">
+            {{ poster(m.Poster, m.Title, "lg") }}
+            <span class="chip">{{ m.Type|capitalize }}</span>
+          </span>
+          <span class="card-body">
+            <span class="card-title">{{ m.Title }}</span>
+            <span class="card-meta">{{ m.Year }}</span>
+          </span>
+        </a>
+      </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <div class="empty">
+      <p><strong>{{ error or "Nothing found." }}</strong></p>
+      <p>Check the spelling, or {% if mode == "title" %}switch to “Words in the title” to see partial matches{% else %}try fewer words{% endif %}.</p>
+      <a class="btn btn-primary" href="{{ url_for('index') }}">Search again</a>
+    </div>
+  {% endif %}
+</section>
+{% endblock %}

@@ -1,0 +1,9 @@
+{% macro poster(url, title, size="md") %}
+  {% if url and url != "N/A" %}
+    <img class="poster poster-{{ size }}" src="{{ url }}" alt="Poster for {{ title }}" loading="lazy" decoding="async">
+  {% else %}
+    <div class="poster poster-{{ size }} poster-empty" role="img" aria-label="No poster for {{ title }}">
+      <span>{{ title[:1] }}</span>
+    </div>
+  {% endif %}
+{% endmacro %}

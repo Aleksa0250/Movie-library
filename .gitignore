@@ -1,0 +1,6 @@
+.env
+favorite_movies.json
+__pycache__/
+*.pyc
+.idea/
+.venv/

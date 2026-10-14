@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% from "_macros.html" import poster %}
+{% block title %}Favorites · Movie Library{% endblock %}
+{% block content %}
+<section class="page">
+  <h1 class="page-title">Favorites</h1>
+
+  {% if movies %}
+    <p class="page-sub">Sorted by IMDb rating, highest first.</p>
+    <ul class="grid">
+      {% for m in movies %}
+      <li class="card">
+        <a class="card-link" href="{{ url_for('movie_detail', imdb_id=m.imdbID) }}">
+          <span class="card-art">
+            {{ poster(m.poster, m.title, "lg") }}
+            <span class="badge"><span class="sr-only">IMDb rating </span>{{ m.rating if m.rating and m.rating != "N/A" else "–" }}</span>
+          </span>
+          <span class="card-body">
+            <span class="card-title">{{ m.title }}</span>
+            <span class="card-meta">{{ m.year }}{% if m.genre and m.genre != "N/A" %}, {{ m.genre }}{% endif %}</span>
+          </span>
+        </a>
+        <form class="card-remove" action="{{ url_for('remove_favorite') }}" method="post">
+          <input type="hidden" name="imdb_id" value="{{ m.imdbID }}">
+          <button type="submit" class="btn btn-quiet" aria-label="Remove {{ m.title }} from favorites">Remove</button>
+        </form>
+      </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <div class="empty">
+      <p><strong>No favorites yet.</strong></p>
+      <p>Search for a movie and save it here.</p>
+      <a class="btn btn-primary" href="{{ url_for('index') }}">Search movies</a>
+    </div>
+  {% endif %}
+</section>
+{% endblock %}

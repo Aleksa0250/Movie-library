@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="finder">
+  <h1>Find a movie</h1>
+  <form class="finder-form" action="{{ url_for('search') }}" method="get">
+    <div class="finder-bar">
+      <svg class="finder-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" focusable="false"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <label class="sr-only" for="q">Movie title or keyword</label>
+      <input id="q" name="q" type="search" placeholder="Blade Runner" autocomplete="off" autofocus required>
+      <button type="submit" class="btn btn-primary">Search</button>
+    </div>
+
+    <fieldset class="modes">
+      <legend class="sr-only">Search type</legend>
+      <label><input type="radio" name="mode" value="keyword" checked> Words in the title</label>
+      <label><input type="radio" name="mode" value="title"> Exact title</label>
+    </fieldset>
+  </form>
+
+  {% if favorites_count %}
+    <p class="hint">You have {{ favorites_count }} saved {{ "movie" if favorites_count == 1 else "movies" }}. <a href="{{ url_for('favorites_page') }}">Open favorites</a></p>
+  {% else %}
+    <p class="hint">Search for a movie, then save it to build your favorites list.</p>
+  {% endif %}
+</section>
+{% endblock %}

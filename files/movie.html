@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% from "_macros.html" import poster %}
+{% block title %}{{ movie.Title }} · Movie Library{% endblock %}
+
+{% macro fact(label, value) %}
+  {% if value and value != "N/A" %}
+    <div><dt>{{ label }}</dt><dd>{{ value }}</dd></div>
+  {% endif %}
+{% endmacro %}
+
+{% block content %}
+<article class="detail">
+  {% if movie.Poster and movie.Poster != "N/A" %}
+    <img class="detail-backdrop" src="{{ movie.Poster }}" alt="" aria-hidden="true">
+  {% endif %}
+
+  <div class="detail-poster">{{ poster(movie.Poster, movie.Title, "lg") }}</div>
+
+  <div class="detail-body">
+    <h1>{{ movie.Title }}</h1>
+    <p class="detail-meta">
+      <span>{{ movie.Year }}</span>
+      {% if movie.Runtime and movie.Runtime != "N/A" %}<span>{{ movie.Runtime }}</span>{% endif %}
+      {% if movie.Rated and movie.Rated != "N/A" %}<span>Rated {{ movie.Rated }}</span>{% endif %}
+    </p>
+
+    {% if movie.Genre and movie.Genre != "N/A" %}
+      <ul class="tags">
+        {% for g in movie.Genre.split(", ") %}<li>{{ g }}</li>{% endfor %}
+      </ul>
+    {% endif %}
+
+    <p class="rating">
+      {% if movie.imdbRating and movie.imdbRating != "N/A" %}
+        <strong>{{ movie.imdbRating }}</strong><span>/ 10 on IMDb</span>
+      {% else %}
+        <span>No IMDb rating yet</span>
+      {% endif %}
+    </p>
+
+    {% if movie.Plot and movie.Plot != "N/A" %}<p class="plot">{{ movie.Plot }}</p>{% endif %}
+
+    <dl class="facts">
+      {{ fact("Director", movie.Director) }}
+      {{ fact("Actors", movie.Actors) }}
+    </dl>
+
+    <div class="actions">
+      {% if saved %}
+        <span class="saved">In your favorites</span>
+        <form action="{{ url_for('remove_favorite') }}" method="post">
+          <input type="hidden" name="imdb_id" value="{{ movie.imdbID }}">
+          <button type="submit" class="btn btn-quiet">Remove</button>
+        </form>
+      {% else %}
+        <form action="{{ url_for('add_favorite') }}" method="post">
+          <input type="hidden" name="imdb_id" value="{{ movie.imdbID }}">
+          <button type="submit" class="btn btn-primary">Save to favorites</button>
+        </form>
+      {% endif %}
+    </div>
+  </div>
+</article>
+{% endblock %}

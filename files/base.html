@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#1a1744">
+  <title>{% block title %}Movie Library{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="bar">
+    <a class="wordmark" href="{{ url_for('index') }}">
+      <svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="2" y="3" width="20" height="18" rx="4" fill="currentColor"/><path d="M10 8.5v7l6-3.5z" fill="#1a1744"/></svg>
+      <span>Movie Library</span>
+    </a>
+    <nav aria-label="Main">
+      <a href="{{ url_for('index') }}"{% if request.endpoint in ('index', 'search', 'movie_detail') %} aria-current="page"{% endif %}>Search</a>
+      <a href="{{ url_for('favorites_page') }}"{% if request.endpoint == 'favorites_page' %} aria-current="page"{% endif %}>Favorites <span class="count">{{ favorites_count }}</span></a>
+    </nav>
+  </header>
+
+  <main id="main">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% for category, message in messages %}
+        <p class="notice notice-{{ category }}" role="status">{{ message }}</p>
+      {% endfor %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="foot">Movie data from OMDb.</footer>
+</body>
+</html>
